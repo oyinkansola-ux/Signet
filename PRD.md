@@ -154,15 +154,29 @@ Each generated pass includes:
 - Share link (optional)
 
 ### 7. QR Verification — Scanner Mode
-A dedicated full-screen scanner view optimised for mobile.
+A dedicated full-screen scanner view optimised for mobile. No physical scanner device is required. The door person uses their phone camera through the app to scan attendee passes.
+
+**How it works:**
+- Temi generates a unique scan-only link for her event — for example `signet.app/scan/event-abc123`
+- She shares this link with whoever is managing the door via WhatsApp, text, or any channel
+- The door person opens the link on their phone browser — no account, no login, no app download required
+- The link opens directly into Scanner Mode — full screen camera view
+- The door person points their phone at the attendee's pass (PNG or PDF on the attendee's phone screen)
+- The app reads the QR code and shows the result instantly
+
+**What the attendee needs:**
+- Just their pass image — PNG or PDF received via WhatsApp or email
+- No app. No account. Just open the image and show the screen.
+
+**The scan-only link is scoped to one event only.** The door person cannot see Temi's dashboard, other events, or any organiser data. They can only scan passes for that specific event.
 
 **Verification states:**
-- ✅ **Valid** — Green screen. Shows attendee name and ticket type. First-time scan.
-- 🔴 **Already Used** — Red screen. "This pass has already been scanned." Timestamp of first scan shown.
-- ⚠️ **Invalid** — Red screen. "This QR code is not recognised."
-- 🔵 **VIP** — Green screen with VIP indicator highlighted prominently.
+- **Valid** — Full green screen. Attendee name and ticket type shown clearly. Confirmed first-time scan.
+- **Already Used** — Full red screen. "This pass has already been scanned." Timestamp of original scan shown.
+- **Invalid** — Full red screen. "This QR code is not recognised."
+- **VIP** — Full green screen with VIP badge highlighted prominently at the top. Door person knows immediately to treat this attendee differently.
 
-The scanner requires no login — the organiser can open a share link on any phone and scan.
+Each scan result is logged automatically and reflected in real time on Temi's Attendance Dashboard.
 
 ### 8. Attendance Dashboard
 After passes are scanned, the organiser sees:
@@ -226,7 +240,7 @@ After passes are scanned, the organiser sees:
 ### Data Model (simplified)
 
 **Events**
-- id, user_id, name, date, time, venue, organiser, description, brand_color, template, banner_url, created_at
+- id, user_id, name, date, time, venue, organiser, description, brand_color, template, banner_url, scan_token (unique public token for scan-only link), created_at
 
 **Attendees**
 - id, event_id, name, email, ticket_type, pass_number, qr_code, status (unused/used), scanned_at, created_at
@@ -248,7 +262,8 @@ After passes are scanned, the organiser sees:
 8. Pass Preview and Generate (step 4)
 9. Attendee List (per event)
 10. Pass Detail (individual pass view)
-11. Scanner / Verify Mode (mobile-optimised)
+11. Scanner / Verify Mode (mobile-optimised, no login required — opens via scan-only link)
+11b. Scan Result Screen (full screen green / red feedback)
 12. Attendance Dashboard (per event)
 13. Settings (profile, dark/light mode toggle)
 
